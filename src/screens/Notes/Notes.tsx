@@ -1,12 +1,12 @@
 import { View, Text } from 'react-native';
 import React from 'react';
 
-const CommonList = () => {
+const Notes = () => {
   return (
     <View>
-      <Text>CommonList</Text>
+      <Text>Notes</Text>
     </View>
   );
 };
 
-export default CommonList;
+export default Notes;

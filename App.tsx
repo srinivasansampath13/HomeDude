@@ -25,11 +25,12 @@ function App() {
 }
 
 function AppContent() {
-  const safeAreaInsets = useSafeAreaInsets();
+  // You can use safeAreaInsets to add padding or margin to your components 
+  // so they don’t overlap with device notches
+  
+  // const safeAreaInsets = useSafeAreaInsets();
   return (
-    <View style={styles.container}>
       <RootNavigator/>
-    </View>
   );
 }
 
