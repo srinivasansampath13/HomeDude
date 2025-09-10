@@ -38,6 +38,7 @@ local.properties
 # node.js
 #
 ios/
+android/
 node_modules/
 npm-debug.log
 yarn-error.log
