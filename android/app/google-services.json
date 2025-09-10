@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "492851561646",
+    "project_id": "homedude-f7c96",
+    "storage_bucket": "homedude-f7c96.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:492851561646:android:9a97a3fa411d340ec3593f",
+        "android_client_info": {
+          "package_name": "com.homedude"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDDcHDtJVyZ_b_POGLrbX8iQdkdIwQoXV8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
