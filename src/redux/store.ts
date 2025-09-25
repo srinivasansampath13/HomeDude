@@ -6,7 +6,8 @@ import authReducer from "./slice/AuthSlice";
 const persistConfig = {
     key: 'root',
     storage: AsyncStorage,
-    whitelist: ['auth']
+    // Do NOT persist the auth slice because Firebase user objects are non-serializable
+    blacklist: ['auth']
 }
 
 const rootReducer = combineReducers({

@@ -1,13 +1,12 @@
 plugins {
     id("com.android.application")
     id("com.google.gms.google-services")
-    // ...other plugins if needed...
 }
 
-apply plugin: "com.android.application"
-apply plugin: 'com.google.gms.google-services' // Add this line
 apply plugin: "org.jetbrains.kotlin.android"
 apply plugin: "com.facebook.react"
+
+def hermesEnabled = project.hasProperty("hermesEnabled") ? project.getProperty("hermesEnabled") : "true"
 
 /**
  * This is the configuration block to customize your React Native Android app.
@@ -117,22 +116,6 @@ android {
 dependencies {
     // The version of react-native is set by the React Native Gradle Plugin
     implementation("com.facebook.react:react-android")
-
-    implementation("com.google.firebase:firebase-analytics")
-
-    implementation platform('com.google.firebase:firebase-bom:32.2.2')
-
-    // Import the BoM for the Firebase platform
-    implementation(platform("com.google.firebase:firebase-bom:34.2.0"))
-
-    // Add the dependency for the Firebase Authentication library
-    // When using the BoM, you don't specify versions in Firebase library dependencies
-    implementation("com.google.firebase:firebase-auth")
-
-    // Also add the dependencies for the Credential Manager libraries and specify their versions
-    implementation("androidx.credentials:credentials:1.3.0")
-    implementation("androidx.credentials:credentials-play-services-auth:1.3.0")
-    implementation("com.google.android.libraries.identity.googleid:googleid:1.1.1")
 
     if (hermesEnabled.toBoolean()) {
         implementation("com.facebook.react:hermes-android")

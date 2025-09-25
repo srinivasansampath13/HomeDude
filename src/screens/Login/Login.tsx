@@ -3,22 +3,24 @@ import React, { useState } from 'react';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useNavigation } from '@react-navigation/native';
 import { RootStackParamList } from '../../navigators/types';
+import { useDispatch, useSelector } from 'react-redux';
+import { loginUser } from '../../redux/thunks/AuthThunks';
+import { AppDispatch, RootState } from '../../redux/store';
 
 type LoginScreenProp = NativeStackNavigationProp<RootStackParamList, 'Login'>;
 
 const Login = () => {
+
   const navigation = useNavigation<LoginScreenProp>();
+
+  const dispatch = useDispatch<AppDispatch>();
+  const {loading, error, user} = useSelector((state: RootState) => state.auth);
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  const loginButtonOnClick = () => {
-    console.log(
-      'Login button clicked with email: ',
-      email,
-      ' and password: ',
-      password,
-    );
+  const loginButtonOnClick = async() => {
+    dispatch(loginUser({email, password}) as any)
   };
 
   return (
@@ -66,7 +68,7 @@ const Login = () => {
           width: '80%',
           alignItems: 'center',
         }}
-      >
+      > 
         <Text style={{ color: 'white' }}>Login</Text>
       </Pressable>
       <Text
