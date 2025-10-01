@@ -10,14 +10,13 @@ const Register = () => {
   const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const dispatch = useDispatch<AppDispatch>();
 
-  const [fName, setFName] = useState('');
-  const [lName, setLName] = useState('');
+  const [userName, setUserName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
   const registerButtonOnClick = async () => {
     try {
-      console.log('Registering user with details:', { fName, lName, email, password });
+      console.log('Registering user with details:', { userName, email, password });
     } catch (error) {
       console.error('Registration failed:', error);
     }
@@ -27,88 +26,35 @@ const Register = () => {
     <View style={styles.container}>
       <Text style={styles.headerText}>Register</Text>
       <TextInput
-        placeholder="First Name"
+        placeholder="Please enter your username"
         keyboardType="name-phone-pad"
         placeholderTextColor={'gray'}
-        onChangeText={text => setFName(text)}
-        value={fName}
-        style={{
-          height: 40,
-          borderColor: 'gray',
-          borderWidth: 1,
-          width: '80%',
-          marginBottom: 10,
-          paddingHorizontal: 10,
-          marginTop: 10,
-          color: 'black',
-        }}
+        onChangeText={text => setUserName(text)}
+        value={userName}
+        style={styles.inputStyle}
       />
       <TextInput
-        placeholder="Last Name"
-        keyboardType="name-phone-pad"
-        placeholderTextColor={'gray'}
-        onChangeText={text => setLName(text)}
-        value={lName}
-        style={{
-          height: 40,
-          borderColor: 'gray',
-          borderWidth: 1,
-          width: '80%',
-          marginBottom: 10,
-          paddingHorizontal: 10,
-          marginTop: 10,
-          color: 'black',
-        }}
-      />
-      <TextInput
-        placeholder="Email"
+        placeholder="Please enter your email"
         keyboardType="email-address"
         placeholderTextColor={'gray'}
         onChangeText={text => setEmail(text)}
         value={email}
-        style={{
-          height: 40,
-          borderColor: 'gray',
-          borderWidth: 1,
-          width: '80%',
-          marginBottom: 10,
-          paddingHorizontal: 10,
-          marginTop: 10,
-          color: 'black',
-        }}
+        style={styles.inputStyle}
       />
       <TextInput
-        placeholder="Password"
+        placeholder="Please enter your password"
         secureTextEntry={true}
         placeholderTextColor={'gray'}
         onChangeText={text => setPassword(text)}
         value={password}
-        style={{
-          height: 40,
-          borderColor: 'gray',
-          borderWidth: 1,
-          width: '80%',
-          marginBottom: 10,
-          paddingHorizontal: 10,
-          color: 'black',
-        }}
+        style={styles.inputStyle}
       />
       <Pressable
         onPress={() => registerButtonOnClick()}
-        style={{
-          backgroundColor: 'blue',
-          padding: 10,
-          borderRadius: 5,
-          width: '80%',
-          alignItems: 'center',
-        }}
-      >
+        style={styles.registerButtonStyle}>
         <Text style={{ color: 'white' }}>Register</Text>
       </Pressable>
-      <Text
-        onPress={() => navigation.goBack()}
-        style={{ color: 'black', marginTop: 10 }}
-      >
+      <Text onPress={() => navigation.goBack()} style={{ color: 'black', marginTop: 10 }}>
         Back to login
       </Text>
     </View>
@@ -125,6 +71,23 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: 'bold',
     color: 'black',
+  },
+  inputStyle:{
+    height: 40,
+    borderColor: 'gray',
+    borderWidth: 1,
+    width: '80%',
+    marginVertical: 10,
+    paddingHorizontal: 10,
+    marginTop: 10,
+    color: 'black',
+  },
+  registerButtonStyle:{
+    backgroundColor: 'blue',
+    padding: 10,
+    borderRadius: 5,
+    width: '80%',
+    alignItems: 'center',
   },
 });
 

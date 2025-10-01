@@ -1,37 +1,14 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import AppNavigator from './AppNavigator';
 import AuthNavigator from './AuthNavigator';
-import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '../redux/store';
-import auth, { FirebaseAuthTypes } from "@react-native-firebase/auth";
-import { setUser, setLoading } from '../redux/slice/AuthSlice';
+import { useAuth0 } from 'react-native-auth0';
 
 const RootNavigator = () => {
-  const { user, loading, error } = useSelector((state: RootState) => state.auth);
-  const dispatch = useDispatch()
 
-  useEffect(() => {
-    dispatch(setLoading(true));
-    const unsubscribe = auth().onAuthStateChanged((user: FirebaseAuthTypes.User | null) => {
-        try {
-          if (user) {
-            dispatch(setUser(user));
-          } else {
-            dispatch(setUser(null));
-          }
-        } catch (error: any) {
-          console.error("Error handling auth state change: ", error);
-        } finally {
-          dispatch(setLoading(false));
-        }
-      }
-    );
+  const { user, isLoading } = useAuth0();
 
-    return unsubscribe;
-  }, [dispatch]);
-
-  if (loading) {
+  if (isLoading) {
     return null;
   }
 

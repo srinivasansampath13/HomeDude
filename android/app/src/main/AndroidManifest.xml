@@ -21,6 +21,10 @@
         <intent-filter>
             <action android:name="android.intent.action.MAIN" />
             <category android:name="android.intent.category.LAUNCHER" />
+            <data
+              android:scheme="com.homedude.auth0"
+              android:host="dev-bstkuoxdwbmfrglv.jp.auth0.com"
+              android:pathPrefix="/android/com.homedude/callback" />
         </intent-filter>
       </activity>
     </application>

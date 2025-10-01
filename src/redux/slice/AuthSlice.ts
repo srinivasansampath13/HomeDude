@@ -1,18 +1,17 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { loginUser } from "../thunks/AuthThunks";
-import { FirebaseAuthTypes } from '@react-native-firebase/auth';
 
 
 interface AuthState {
-    user: FirebaseAuthTypes.User | null;
+    user: any | null;
     loading: boolean;
-    error: string | null;
+    error: any;
 }
 
 const initialState: AuthState = {
     user: null,
     loading: false,
-    error: '',
+    error: null,
 };
 
 const authSlice = createSlice({
@@ -39,12 +38,13 @@ const authSlice = createSlice({
             console.log('Login user fulfilled...');
             state.user = action.payload;
             state.loading = false;
+            state.error = null;
         })
 
         builder.addCase(loginUser.rejected,(state, action) => {
             console.log('Login user rejected...');
             state.loading = false;
-            state.error = action.payload as string;
+            state.error = action.payload || "Login failed";
         })
     }
 });
