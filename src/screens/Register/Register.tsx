@@ -86,6 +86,9 @@ const Register = () => {
         value={password}
         style={styles.inputStyle}
       />
+      {
+        errorStr ? <Text style = {styles.redAlertStyle}>{errorStr}</Text> : null 
+      }
       <Pressable
         onPress={() => registerButtonOnClick()}
         style={styles.registerButtonStyle}>
@@ -126,6 +129,12 @@ const styles = StyleSheet.create({
     width: '80%',
     alignItems: 'center',
   },
+  redAlertStyle: {
+    color: 'red', 
+    fontSize: 13,
+    width: '80%',
+    fontWeight: '500'
+  }
 });
 
 export default Register;
