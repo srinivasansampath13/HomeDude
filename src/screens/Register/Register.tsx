@@ -1,10 +1,12 @@
-import { StyleSheet, Text, View, TextInput, Pressable } from 'react-native';
+import { StyleSheet, Text, View, TextInput, Pressable, Alert } from 'react-native';
 import React, { useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useDispatch } from 'react-redux';
 import { AppDispatch } from '../../redux/store';
 import { RootStackParamList } from '../../navigators/types';
+import { registerUser } from '../../redux/thunks/AuthThunks';
+import { isEmailValidation } from '../../utils/utils';
 
 const Register = () => {
   const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
@@ -13,12 +15,47 @@ const Register = () => {
   const [userName, setUserName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [errorStr, setErrorStr] = useState('') 
+
+  const handleValidation = () => {
+    if(userName.trim() === '' && email.trim() === '' && password.trim() === ''){
+      setErrorStr('Name, Email, Password should not be empty');
+      return false;
+    }
+
+    if(password.length < 6){
+      setErrorStr('Password must be greater than six characters');
+      return false;
+    }
+
+    if(!isEmailValidation(email)){
+      setErrorStr('Please enter a valid email')
+      return false;
+    }
+    return true
+  }
 
   const registerButtonOnClick = async () => {
     try {
-      console.log('Registering user with details:', { userName, email, password });
-    } catch (error) {
-      console.error('Registration failed:', error);
+      if(handleValidation()){
+        try{
+          await dispatch(registerUser({userName, email, password}) as any).unwrap();
+          Alert.alert(
+            'Success',
+            'User added successfully! Please go back to login and sign in.',
+            [
+              {
+                text: 'OK',
+                onPress: () => navigation.goBack()
+              }
+            ]
+          );
+        }catch(error:any){
+          setErrorStr(error)
+        }
+      }
+    } catch (error: any) {
+      setErrorStr(error)
     }
   };
 

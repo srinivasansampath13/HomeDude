@@ -1,6 +1,5 @@
 import Auth0 from 'react-native-auth0';
 
-
 const auth0 = new Auth0({
     domain: 'dev-bstkuoxdwbmfrglv.jp.auth0.com',
     clientId: 'LmD3L9pJPjdEVRri0EQ72QgXC5JqHho5',
@@ -25,4 +24,14 @@ export const registerWithNameEmailPassword = async (name: string, email: string,
         connection: 'Username-Password-Authentication',
         user_metadata: { name }, // store the name in user metadata
     });
+}
+
+// Logout 
+export const logoutUserAuth0 = async () => {
+    try{
+        await auth0.webAuth.clearSession();
+        return true;
+    }catch(error: any){
+        throw new Error('Unable to logout. Please try after sometimes')
+    }
 }

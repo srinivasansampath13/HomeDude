@@ -6,7 +6,7 @@ import { RootStackParamList } from '../../navigators/types';
 import { useDispatch, useSelector } from 'react-redux';
 import { loginUser } from '../../redux/thunks/AuthThunks';
 import { AppDispatch, RootState } from '../../redux/store';
-import { emailValidation } from '../../utils/utils';
+import { isEmailValidation } from '../../utils/utils';
 
 type LoginScreenProp = NativeStackNavigationProp<RootStackParamList, 'Login'>;
 
@@ -67,7 +67,7 @@ const Login = () => {
       return false
     }
 
-    if(!emailValidation(email)){
+    if(!isEmailValidation(email)){
       setErrorStr('Please enter a valid email')
       return false
     }
@@ -76,13 +76,13 @@ const Login = () => {
   }
 
   const loginButtonOnClick = async () => {
-    if(handleValidation()){
       try {
-        await dispatch(loginUser({email, password}) as any).unwrap();
+        if(handleValidation()){
+          await dispatch(loginUser({email, password}) as any).unwrap();
+        }
       } catch (error: any) {
         setErrorStr(mapAuth0Error(error));
       }
-    }
   };
 
   return (
