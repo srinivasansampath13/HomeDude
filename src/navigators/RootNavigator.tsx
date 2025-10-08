@@ -1,5 +1,4 @@
 import React from 'react';
-import {ActivityIndicator} from 'react-native'
 import { NavigationContainer } from '@react-navigation/native';
 import AppNavigator from './AppNavigator';
 import AuthNavigator from './AuthNavigator';
@@ -8,9 +7,7 @@ import { RootState } from '../redux/store';
 
 const RootNavigator = () => {
 
-  const {user} = useSelector((state: RootState) => ({
-    user: state.auth.user,
-  }));
+  const user = useSelector((state: RootState) => state.auth.user);
 
   return (
     <NavigationContainer>
