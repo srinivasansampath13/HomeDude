@@ -27,11 +27,11 @@ const Profile = () => {
   }
 
   return (
-    <View style={{flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'gray'}}>
+    <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
       <Text>Profile</Text>
       <TouchableWithoutFeedback onPress={() => logoutOnClick()}>
         <View style = {{backgroundColor: 'blue', padding: 10, borderRadius: 5, marginTop: 20}}>
-            <Text>Logout</Text>
+            <Text style = {{color: 'white'}}>Logout</Text>
         </View>
       </TouchableWithoutFeedback>
     </View>
