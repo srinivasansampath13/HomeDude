@@ -1,17 +1,23 @@
-import React from 'react'
+import React from 'react';
+import {ActivityIndicator} from 'react-native'
 import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import AppNavigator from './AppNavigator';
 import AuthNavigator from './AuthNavigator';
-
-const Stack = createNativeStackNavigator();
+import { useSelector } from 'react-redux';
+import { RootState } from '../redux/store';
 
 const RootNavigator = () => {
+
+  const {user} = useSelector((state: RootState) => ({
+    user: state.auth.user,
+  }));
+
   return (
     <NavigationContainer>
-     {true ? <AppNavigator /> : <AuthNavigator />}
+      {user ? <AppNavigator /> : <AuthNavigator />}
     </NavigationContainer>
-  )
-}
+    
+  );
+};
 
-export default RootNavigator
+export default RootNavigator;
