@@ -1,37 +1,50 @@
-import { StyleSheet, Text, View, TextInput, TouchableWithoutFeedback } from 'react-native';
+import { StyleSheet, Text, View, TextInput, TouchableWithoutFeedback, ActivityIndicator } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import { RootStackParamList } from '../../navigators/types';
 import { useDispatch, useSelector } from 'react-redux';
 import { loginUser } from '../../redux/thunks/AuthThunks';
 import { AppDispatch, RootState } from '../../redux/store';
+import { setLoading, clearError } from '../../redux/slice/AuthSlice';
 import { isEmailValidation } from '../../utils/utils';
 
 type LoginScreenProp = NativeStackNavigationProp<RootStackParamList, 'Login'>;
 
 const Login = () => {
-
   const navigation = useNavigation<LoginScreenProp>();
-
   const dispatch = useDispatch<AppDispatch>();
-  const {error} = useSelector((state: RootState) => state.auth);
+  const {error, loading} = useSelector((state: RootState) => state.auth);
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [errorStr, setErrorStr] = useState('');
 
-  const mapAuth0Error = (err: any): string => {
-    console.log('mapError++++1',err)
+  // Clear error when component mounts
+  useEffect(() => {
+    dispatch(clearError());
+    setErrorStr(''); // Also clear local error state
+  }, []);
+
+  // Clear error when screen comes into focus (handles navigation)
+  useFocusEffect(
+    React.useCallback(() => {
+      dispatch(clearError());
+      setErrorStr('');
+    }, [dispatch])
+  );
+
+  const mapAuth0LoginError = (err: any): string => {
     const msg = typeof err === 'string' ? err : err?.message || err?.code || '';
     const desc = err?.json?.error_description || err?.description || '';
     const text = `${msg} ${desc}`.toLowerCase();
-    console.log('mapError++++2',text)
 
     if (text.includes('not allowed for the client')) {
       return 'Unauthorized. Please contact support.';
     }
-
+    if (text.includes('wrong email or password')) {
+      return 'Wrong email or password. Try register';
+    }
     if (text.includes('invalid_grant') || text.includes('invalid credentials')) {
       return 'Invalid email or password.';
     }
@@ -52,7 +65,7 @@ const Login = () => {
 
   useEffect(() => {
     if (error) {
-      setErrorStr(mapAuth0Error(error));
+      setErrorStr(mapAuth0LoginError(error));
     }
   }, [error]);
 
@@ -81,7 +94,7 @@ const Login = () => {
           await dispatch(loginUser({email, password}) as any).unwrap();
         }
       } catch (error: any) {
-        setErrorStr(mapAuth0Error(error));
+        setErrorStr(mapAuth0LoginError(error));
       }
   };
 
@@ -115,10 +128,18 @@ const Login = () => {
       }
       <TouchableWithoutFeedback onPress={() => loginButtonOnClick()}> 
         <View style = {styles.loginButtonStyle}>
-            <Text style={{ color: 'white' }}>Login</Text>
+            {
+              loading ? <ActivityIndicator size="small" color = 'white'/> : <Text style={{ color: 'white' }}>Login</Text>
+            }
         </View>
       </TouchableWithoutFeedback>
-      <Text onPress={() => navigation.navigate('Register')} style={styles.clickHereToRegister}>
+      <Text onPress={() => {
+        dispatch(clearError());
+        navigation.navigate('Register')
+        setErrorStr('')
+        setEmail('')
+        setPassword('')
+      }} style={styles.clickHereToRegister}>
           Click Here to Register
       </Text>
     </View>

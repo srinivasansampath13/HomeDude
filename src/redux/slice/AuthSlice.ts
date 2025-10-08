@@ -23,68 +23,71 @@ const authSlice = createSlice({
         },
 
         setLoading(state, action: PayloadAction<boolean>) {
-            state.loading =action.payload;
+            state.loading = action.payload;
         },
+
+        clearError(state) {
+            state.error = null;
+        },
+
+        logout(state){
+            state.error = null;
+            state.loading = false;
+            state.user = null;
+        }
     },
     extraReducers: (builder) => {
         // Login User
         builder.addCase(loginUser.pending, (state) => {
-            console.log('Login user pending...');
             state.loading = true;
             state.error = null;
         })
 
         builder.addCase(loginUser.fulfilled, (state, action) => {
-            console.log('Login user fulfilled...');
             state.user = action.payload;
             state.loading = false;
             state.error = null;
         })
 
         builder.addCase(loginUser.rejected,(state, action) => {
-            console.log('Login user rejected...');
             state.loading = false;
             state.error = action.payload || "Login failed";
         })
 
         // Register User
         builder.addCase(registerUser.pending, (state) => {
-            console.log('Register user pending...');
-            state.loading = true,
+            state.loading = true;
             state.error = null;
         });
 
         builder.addCase(registerUser.fulfilled, (state, action) => {
-            console.log('Register user fullfilled...');
             state.loading = false;
-            state.user = action.payload;
             state.error = null;
         })
 
         builder.addCase(registerUser.rejected, (state, action) => {
-            console.log('Register user rejected...');
             state.loading = false;
             state.error = action.payload || 'Registration failed'
         })
 
         // Logout User
-        builder.addCase(loginUser.pending, (state) => {
+        builder.addCase(logoutUser.pending, (state) => {
             state.loading = true;
             state.error = null;
         })
 
-        builder.addCase(loginUser.fulfilled, (state) => {
+        builder.addCase(logoutUser.fulfilled, (state) => {
             state.loading = false;
             state.user = null;
             state.error = null;
         })
 
-        builder.addCase(loginUser.rejected, (state) => {
+        builder.addCase(logoutUser.rejected, (state) => {
             state.loading = false;
             state.error = null;
         })
     }
 });
 
-export const { setUser, setLoading } = authSlice.actions;
+export const { setUser, setLoading, clearError } = authSlice.actions;
 export default authSlice.reducer;

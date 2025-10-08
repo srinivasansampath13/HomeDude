@@ -9,8 +9,7 @@ export const loginUser = createAsyncThunk(
             const credentials = await loginWithEmailPassword(email, password);
             return credentials;
         }catch(error: any){
-            console.log('Error in loginUser thunk: ', error);
-            return thunkAPI.rejectWithValue(error.message);
+            return thunkAPI.rejectWithValue(error);
         }
     }
 );
@@ -23,8 +22,7 @@ export const registerUser = createAsyncThunk(
             const registerUserResponse = await registerWithNameEmailPassword(userName, email, password);
             return registerUserResponse;
         }catch(error: any){
-            console.log('Error in registerUser thunk: ',error);
-            return thunkAPI.rejectWithValue(error.message)
+            return thunkAPI.rejectWithValue(error)
         }
     }
 );
@@ -36,7 +34,7 @@ export const logoutUser = createAsyncThunk(
         try{
             await logoutUserAuth0();
         }catch(error: any){
-            return rejectWithValue(error.message || 'Logout failed')
+            return rejectWithValue(error || 'Logout failed')
         }
     }
 );
