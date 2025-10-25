@@ -100,7 +100,9 @@ const Login = () => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.headerText}>Login</Text>
+      <View>
+        <Text style={styles.headerText}>Login</Text>
+      </View>
       <TextInput
         placeholder="Please enter your email"
         style={styles.emailInputStyle}
@@ -123,6 +125,11 @@ const Login = () => {
         }}
         value={password}
       />
+      <TouchableWithoutFeedback onPress={() => navigation.navigate('ForgotPassword')}>
+        <View style = {{alignSelf: 'flex-end', paddingRight: '10%'}}>
+          <Text style = {{color: 'black', fontSize: 15}}>Forgot Password?</Text>
+        </View>
+      </TouchableWithoutFeedback>
       {
         errorStr ? <Text style = {styles.redAlertStyle}>{errorStr}</Text> : null 
       }
@@ -156,9 +163,10 @@ const styles = StyleSheet.create({
       fontSize: 20,
       fontWeight: 'bold',
       color: 'black',
+      paddingHorizontal: 8
   },
   emailInputStyle:{
-      height: 40,
+      height: 50,
       borderColor: 'gray',
       borderWidth: 1,
       width: '80%',
@@ -168,7 +176,7 @@ const styles = StyleSheet.create({
       color: 'black',
   },
   passwordInputStyle:{
-      height: 40,
+      height: 50,
       borderColor: 'gray',
       borderWidth: 1,
       width: '80%',
@@ -177,12 +185,12 @@ const styles = StyleSheet.create({
       color: 'black',
     },
   loginButtonStyle:{
-      width: '80%',
-      backgroundColor: 'blue',
-      height: 40,
-      justifyContent: 'center',
-      alignItems: 'center',
-      marginVertical: 10,
+    backgroundColor: 'blue',
+    padding: 10,
+    borderRadius: 5,
+    width: '80%',
+    alignItems: 'center',
+    marginVertical: 8
  },
  clickHereToRegister:{ 
     color: 'black', 

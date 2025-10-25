@@ -31,12 +31,10 @@ const Profile = () => {
   return (
     <View style={{flex: 1}}>
       <View style = {{justifyContent: 'center', alignItems: 'center', marginTop: '5%'}}>
-          {picture && !imageError ? (
+          {picture ? (
             <Image 
               source={{uri: picture}}
               style = {{width: 100, height: 100, borderRadius: 50}}
-              onError={() => setImageError(true)}
-              onLoad={() => setImageError(false)}
             />
           ) : (
             <View style={{width: 100, height: 100, borderRadius: 50, backgroundColor: 'gray', justifyContent: 'center', alignItems: 'center'}}>

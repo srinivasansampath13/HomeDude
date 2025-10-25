@@ -3,6 +3,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Login from '../screens/Login/Login';
 import Register from '../screens/Register/Register';
 import { RootStackParamList } from './types';
+import ForgotPassword from '../screens/ForgotPassword/ForgotPassword';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
@@ -18,6 +19,11 @@ const AuthNavigator = () => {
         name="Register"
         component={Register}
         options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="ForgotPassword"
+        component={ForgotPassword}
+        options={{ headerShown: true }}
       />
     </Stack.Navigator>
   );

@@ -5,13 +5,15 @@ const auth0 = new Auth0({
     clientId: 'LmD3L9pJPjdEVRri0EQ72QgXC5JqHho5',
 })
 
+const CONNECTION = 'Username-Password-Authentication'; // Default DB connection
+
 // Login with Email and Password
 export const loginWithEmailPassword = async (email: string, password: string) => {
     try{
         const response = await auth0.auth.passwordRealm({
             username: email,
             password: password,
-            realm: 'Username-Password-Authentication',
+            realm: CONNECTION,
             scope: 'openid profile email',
         })
         if(response && response?.accessToken){
@@ -36,12 +38,25 @@ export const registerWithNameEmailPassword = async (userName: string, email: str
           email,
           password,
           username: userName,
-          connection: 'Username-Password-Authentication',
+          connection: CONNECTION,
         });
-        return response; // ✅ success
+        return response;
       } catch (error: any) {
         throw error;
       }
+}
+
+// Forgot Password with email
+export const sendForgotPasswordWithEmail = async (email: string) => {
+    try{
+        const response = await auth0.auth.resetPassword({
+            email,
+            connection: CONNECTION
+        });
+        return { success: true, message: 'Password reset email sent successfully' };
+    }catch(error: any){
+        throw new Error(error || 'Failed to send reset email')
+    }
 }
 
 // Logout 
@@ -50,8 +65,6 @@ export const logoutUserAuth0 = async () => {
         await auth0.webAuth.clearSession();
         return true;
     } catch (error: any) {
-        // Even if clearSession fails, we should still return true
-        // as the local state will be cleared by Redux
         return true;
     }
 }

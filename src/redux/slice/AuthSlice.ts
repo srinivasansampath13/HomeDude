@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { loginUser, registerUser, logoutUser } from "../thunks/AuthThunks";
+import { loginUser, registerUser, forgotPasswordUser, logoutUser } from "../thunks/AuthThunks";
 
 interface AuthState {
     user: any | null;
@@ -68,6 +68,19 @@ const authSlice = createSlice({
         builder.addCase(registerUser.rejected, (state, action) => {
             state.loading = false;
             state.error = action.payload || 'Registration failed'
+        })
+
+        // Forgot Password
+        builder.addCase(forgotPasswordUser.pending, (state) => {
+            state.loading = true
+        })
+
+        builder.addCase(forgotPasswordUser.fulfilled, (state) => {
+            state.loading = false
+        })
+
+        builder.addCase(forgotPasswordUser.rejected, (state) => {
+            state.loading = false
         })
 
         // Logout User
