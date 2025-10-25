@@ -39,7 +39,6 @@ const Register = () => {
     const msg = typeof err === 'string' ? err : err?.message || err?.code || '';
     const desc = err?.json?.error_description || err?.description || '';
     const text = `${msg} ${desc}`.toLowerCase();
-    console.log('text++++',text)
 
     if (text.includes('user already exists') || text.includes('already exists')) {
         return 'An account with this email already exists. Please try logging in instead.';

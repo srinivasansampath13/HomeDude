@@ -28,7 +28,6 @@ const Profile = () => {
   }
 
   const { email, picture, emailVerified } = user?.user || {}
-  console.log('userInfo+++',user?.user)
   return (
     <View style={{flex: 1}}>
       <View style = {{justifyContent: 'center', alignItems: 'center', marginTop: '5%'}}>

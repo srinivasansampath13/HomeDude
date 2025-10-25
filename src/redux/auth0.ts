@@ -52,7 +52,6 @@ export const logoutUserAuth0 = async () => {
     } catch (error: any) {
         // Even if clearSession fails, we should still return true
         // as the local state will be cleared by Redux
-        console.log('Auth0 clearSession error:', error);
         return true;
     }
 }
