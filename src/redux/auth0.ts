@@ -46,5 +46,13 @@ export const registerWithNameEmailPassword = async (userName: string, email: str
 
 // Logout 
 export const logoutUserAuth0 = async () => {
-   return true;
+    try {
+        await auth0.webAuth.clearSession();
+        return true;
+    } catch (error: any) {
+        // Even if clearSession fails, we should still return true
+        // as the local state will be cleared by Redux
+        console.log('Auth0 clearSession error:', error);
+        return true;
+    }
 }

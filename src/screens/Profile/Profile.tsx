@@ -1,5 +1,5 @@
 import { View, Text, TouchableWithoutFeedback, Alert, Image } from 'react-native'
-import React from 'react'
+import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { AppDispatch, RootState } from '../../redux/store'
 import { logoutUser } from '../../redux/thunks/AuthThunks'
@@ -7,6 +7,7 @@ import { logoutUser } from '../../redux/thunks/AuthThunks'
 const Profile = () => {
   const { user } = useSelector((state: RootState) => state.auth)
   const dispatch = useDispatch<AppDispatch>();
+  const [imageError, setImageError] = useState(false);
 
   const logoutOnClick = async() => {
     try{
@@ -26,19 +27,21 @@ const Profile = () => {
     }
   }
 
-  const { email, picture, emailVerified } = user?.user
-  console.log('userInfo+++',user.user)
+  const { email, picture, emailVerified } = user?.user || {}
+  console.log('userInfo+++',user?.user)
   return (
     <View style={{flex: 1}}>
       <View style = {{justifyContent: 'center', alignItems: 'center', marginTop: '5%'}}>
-          {picture ? (
+          {picture && !imageError ? (
             <Image 
               source={{uri: picture}}
               style = {{width: 100, height: 100, borderRadius: 50}}
+              onError={() => setImageError(true)}
+              onLoad={() => setImageError(false)}
             />
           ) : (
-            <View style={{width: 100, height: 100, borderRadius: 10, backgroundColor: 'gray', justifyContent: 'center', alignItems: 'center'}}>
-              <Text>No Image</Text>
+            <View style={{width: 100, height: 100, borderRadius: 50, backgroundColor: 'gray', justifyContent: 'center', alignItems: 'center'}}>
+              <Text style={{color: 'white', fontSize: 12}}>No Image</Text>
             </View>
           )}
         <View style = {{marginVertical: 8}}>
