@@ -1,15 +1,15 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { loginWithEmailPassword, registerWithNameEmailPassword, sendForgotPasswordWithEmail, logoutUserAuth0 } from "../auth0";
+import { loginWithEmailPassword, registerWithNameEmailPassword, sendForgotPasswordWithEmail, logoutUserAuth0, loginWithGoogle, logoutUserGoogle } from "../auth0";
 
 // Login user with email and password
 export const loginUser = createAsyncThunk(
     'auth/loginUser',
-    async ({ email, password} : {email: string, password: string}, thunkAPI) => {
+    async ({ email, password} : {email: string, password: string}, { rejectWithValue }) => {
         try{
             const credentials = await loginWithEmailPassword(email, password);
             return credentials;
         }catch(error: any){
-            return thunkAPI.rejectWithValue(error);
+            return rejectWithValue(error);
         }
     }
 );
@@ -43,11 +43,31 @@ export const forgotPasswordUser = createAsyncThunk(
 // Logout
 export const logoutUser = createAsyncThunk(
     'auth/logoutUser',
-    async (_, { rejectWithValue }) => {
+    async (_, { getState, rejectWithValue }) => {
         try{
-            await logoutUserAuth0();
+            const state = getState() as any;
+            const loginType = state.auth.loginType;
+
+            if(loginType === 'google') {
+                await logoutUserGoogle();
+            }else if(loginType === 'email'){
+                await logoutUserAuth0();
+            }
         }catch(error: any){
             return rejectWithValue(error || 'Logout failed')
+        }
+    }
+);
+
+// Google signin
+export const loginWithGoogleUser = createAsyncThunk(
+    'auth/loginWithGoogle',
+    async (_, { rejectWithValue }) => {
+        try{
+            const credentials = await loginWithGoogle();
+            return credentials;
+        }catch(error: any){
+            return rejectWithValue(error);
         }
     }
 );

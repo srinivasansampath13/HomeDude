@@ -31,12 +31,13 @@ const Profile = () => {
   return (
     <View style={{flex: 1}}>
       <View style = {{justifyContent: 'center', alignItems: 'center', marginTop: '5%'}}>
-          {picture ? (
+          {picture || user?.user?.photo? (
             <Image 
-              source={{uri: picture}}
+              source={{uri: picture ? picture : user.user.photo}}
               style = {{width: 100, height: 100, borderRadius: 50}}
             />
-          ) : (
+          ) 
+          : (
             <View style={{width: 100, height: 100, borderRadius: 50, backgroundColor: 'gray', justifyContent: 'center', alignItems: 'center'}}>
               <Text style={{color: 'white', fontSize: 12}}>No Image</Text>
             </View>

@@ -4,17 +4,18 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import { RootStackParamList } from '../../navigators/types';
 import { useDispatch, useSelector } from 'react-redux';
-import { loginUser } from '../../redux/thunks/AuthThunks';
+import { loginUser, loginWithGoogleUser } from '../../redux/thunks/AuthThunks';
 import { AppDispatch, RootState } from '../../redux/store';
-import { setLoading, clearError } from '../../redux/slice/AuthSlice';
+import { clearError } from '../../redux/slice/AuthSlice';
 import { isEmailValidation } from '../../utils/utils';
+import {statusCodes} from '@react-native-google-signin/google-signin';
 
 type LoginScreenProp = NativeStackNavigationProp<RootStackParamList, 'Login'>;
 
 const Login = () => {
   const navigation = useNavigation<LoginScreenProp>();
   const dispatch = useDispatch<AppDispatch>();
-  const {error, loading} = useSelector((state: RootState) => state.auth);
+  const {error, emailLoading, googleLoading} = useSelector((state: RootState) => state.auth);
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -88,20 +89,51 @@ const Login = () => {
     return true;
   }
 
-  const loginButtonOnClick = async () => {
-      try {
-        if(handleValidation()){
-          await dispatch(loginUser({email, password}) as any).unwrap();
-        }
-      } catch (error: any) {
-        setErrorStr(mapAuth0LoginError(error));
+  const loginButtonOnClick = async (type: string) => {
+      if(type === 'AuthLogin'){
+          try {
+            if(handleValidation()){
+              await dispatch(loginUser({email, password}) as any).unwrap();
+            }
+          } catch (error: any) {
+            setErrorStr(mapAuth0LoginError(error));
+          }
+      }else if(type === 'GoogleLogin'){
+         try {
+          setErrorStr('');
+          await dispatch(loginWithGoogleUser()).unwrap();
+          } catch (error: any) {
+              console.error('Google Login Error Details:', error);
+              const errorMessage = error?.message || String(error);
+              const errorCode = error?.code;
+              const errorText = errorMessage.toLowerCase();
+              
+              // Handle cancelled login - don't show error, just silently return
+              if (errorMessage.includes('USER_CANCELLED_LOGIN') || errorCode === statusCodes.SIGN_IN_CANCELLED || errorText.includes('cancelled')) {
+                setErrorStr('Please try to login again...!!!')
+                return;
+              }
+              
+              // Handle specific error codes
+              if (errorCode === statusCodes.IN_PROGRESS) {
+                setErrorStr('Sign-in operation already in progress');
+              } else if (errorCode === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
+                setErrorStr('Google Play Services not available or outdated');
+              } else if (errorText.includes('not configured') || errorText.includes('web client')) {
+                setErrorStr('Google Sign-in not properly configured. Check your credentials.');
+              } else if (errorText.includes('network') || errorText.includes('timeout')) {
+                setErrorStr('Network error. Check your connection and try again.');
+              } else {
+                setErrorStr(`Google Sign-in failed: ${errorMessage}`);
+              }
+          }
       }
   };
 
   return (
     <View style={styles.container}>
       <View>
-        <Text style={styles.headerText}>Login</Text>
+        <Text style={styles.headerText}>Sign In</Text>
       </View>
       <TextInput
         placeholder="Please enter your email"
@@ -133,10 +165,10 @@ const Login = () => {
       {
         errorStr ? <Text style = {styles.redAlertStyle}>{errorStr}</Text> : null 
       }
-      <TouchableWithoutFeedback onPress={() => loginButtonOnClick()}> 
+      <TouchableWithoutFeedback onPress={() => loginButtonOnClick('AuthLogin')}> 
         <View style = {styles.loginButtonStyle}>
             {
-              loading ? <ActivityIndicator size="small" color = 'white'/> : <Text style={{ color: 'white' }}>Login</Text>
+              emailLoading ? <ActivityIndicator size="small" color = 'white'/> : <Text style={{ color: 'white' }}>Login</Text>
             }
         </View>
       </TouchableWithoutFeedback>
@@ -149,6 +181,14 @@ const Login = () => {
       }} style={styles.clickHereToRegister}>
           Click Here to Register
       </Text>
+
+      <TouchableWithoutFeedback onPress={() => loginButtonOnClick('GoogleLogin')}>
+          <View style={{marginTop: 30, backgroundColor: '#FF52A0', padding: 15, borderRadius: 25}}>
+              {
+                googleLoading ? <ActivityIndicator size="small" color = 'white'/> : <Text style={{ color: 'white' }}>Signin with Google</Text>
+              }
+          </View>
+      </TouchableWithoutFeedback>
     </View>
   );
 };

@@ -1,3 +1,4 @@
+import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import Auth0 from 'react-native-auth0';
 
 const auth0 = new Auth0({
@@ -66,5 +67,49 @@ export const logoutUserAuth0 = async () => {
         return true;
     } catch (error: any) {
         return true;
+    }
+}
+
+// Google Signin
+export const loginWithGoogle = async() => {
+    try{
+        await GoogleSignin.hasPlayServices();
+        const response = await GoogleSignin.signIn();
+        // Check if user cancelled the sign-in
+        if (response.type === 'cancelled') {
+            throw new Error('USER_CANCELLED_LOGIN');
+        }
+        
+        // Check if data is null or invalid
+        if (!response.data) {
+            throw new Error('No user data received from Google Sign-in');
+        }
+        
+        // Format response to match email/password login structure
+        const formattedUserInfo = {
+            accessToken: response.data?.idToken || '',
+            idToken: response.data?.idToken || '',
+            user: {
+                email: response.data?.user?.email || '',
+                name: response.data?.user?.name || '',
+                photo: response.data?.user?.photo || '',
+                sub: response.data?.user?.id || ''
+            }
+        };
+        return formattedUserInfo;
+    }catch(error: any){
+        console.error('Google Sign-in Error:', error);
+        throw error;
+    }
+}
+
+// Logout User Google
+export const logoutUserGoogle = async () => {
+    try{
+        await GoogleSignin.signOut();
+        return true;
+    }catch(error: any){
+        console.error('Google Sign-out Error',error);
+        throw error;
     }
 }
